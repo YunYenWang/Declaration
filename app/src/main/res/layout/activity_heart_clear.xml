@@ -23,7 +23,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
@@ -44,9 +44,9 @@
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:text="https://goo.gl/nuldeD"
-                app:layout_constraintEnd_toEndOf="@+id/textView5"
-                app:layout_constraintStart_toStartOf="@+id/textView5"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                app:layout_constraintEnd_toEndOf="@+id/message"
+                app:layout_constraintStart_toStartOf="@+id/message"
+                app:layout_constraintTop_toBottomOf="@+id/message" />
 
         </android.support.constraint.ConstraintLayout>
 

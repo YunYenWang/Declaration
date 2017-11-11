@@ -6,7 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Paint;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -30,7 +30,6 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,43 +45,29 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     static final Logger LOG = LoggerFactory.getLogger(MainActivity.class);
 
-    static final int DEFAULT_TEXT_SIZE = 12;
-
-    /**
-     * The {@link android.support.v4.view.PagerAdapter} that will provide
-     * fragments for each of the sections. We use a
-     * {@link FragmentPagerAdapter} derivative, which will keep every
-     * loaded fragment in memory. If this becomes too memory intensive, it
-     * may be best to switch to a
-     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
-     */
     SectionsPagerAdapter mSectionsPagerAdapter;
-
-    /**
-     * The {@link ViewPager} that will host the section contents.
-     */
     ViewPager mViewPager;
+
     FloatingActionButton favor;
 
     List<String> declarations = new ArrayList<>();
-
-    int textSize = DEFAULT_TEXT_SIZE;
+    int textSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
+        textSize = settings.getInt("TextSize", Constants.DEFAULT_TEXT_SIZE);
+
         buildDeclarations();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        // Create the adapter that will return a fragment for each of the three
-        // primary sections of the activity.
-        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
-        // Set up the ViewPager with the sections adapter.
-        mViewPager = (ViewPager) findViewById(R.id.container);
+        mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+        mViewPager = findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -91,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                File f = newPositionFavoredFiile(position);
+                File f = newPositionFavoredFile(position); // adjust the icon of the favored button when the page is changed
                 setFavorite(f.canRead());
             }
 
@@ -100,8 +85,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.home);
+        // change the page randomly
+        FloatingActionButton fab = findViewById(R.id.home);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -109,12 +94,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        favor = (FloatingActionButton) findViewById(R.id.favor);
+        // keep or remove the favored page
+        favor = findViewById(R.id.favor);
         favor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 int position = mViewPager.getCurrentItem();
-                File f = newPositionFavoredFiile(position);
+                File f = newPositionFavoredFile(position);
                 if (f.canRead()) {
                     f.delete();
                     setFavorite(false);
@@ -130,22 +116,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // change the current page by date
         int index = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1;
         if (index >= declarations.size()) {
             index = (int) (Math.random() * declarations.size());
         }
-
         mViewPager.setCurrentItem(index);
     }
 
-    File newPositionFavoredFiile(int position) {
-        return new File(getCacheDir(), String.format("favor.%d", position));
+    // ======
+
+    File newPositionFavoredFile(int position) {
+        return new File(getCacheDir(), String.format(Constants.FAVOR_FILE_NAME_PREFIX_FORMAT, position));
     }
 
+    // adjust icon of the favored page
     void setFavorite(boolean favorite) {
         favor.setImageResource(favorite? android.R.drawable.btn_star_big_on : android.R.drawable.btn_star_big_off);
     }
 
+    // just build an empty favor 'file'
     void touch(File f) {
         try {
             FileOutputStream fos = new FileOutputStream(f);
@@ -165,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
     void buildDeclarations() {
         try {
-            InputStream is = getAssets().open("declaration.txt");
+            InputStream is = getAssets().open(Constants.DECLARATION_FILE);
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 
@@ -209,19 +199,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_favor) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             final FavorListAdaptor adaptor = new FavorListAdaptor(this);
@@ -236,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
             builder.show();
 
             return true;
+
         } else if (id == R.id.action_clear) {
             Intent intent = new Intent(this, HeartClearActivity.class);
             startActivity(intent);
@@ -252,64 +238,44 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    // ======
+
     public void onTextSizeIncreased(View view) {
         textSize += 2;
+
+        saveAdjustedTextSize();
 
         Intent intent = new Intent("TextSize");
         intent.putExtra("TextSize", textSize);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-//        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-//        mSectionsPagerAdapter.notifyDataSetChanged();
-//        mViewPager.setCurrentItem(mViewPager.getCurrentItem());
-
-//        for (Fragment f : fragments) {
-//            TextView tv = (TextView) f.getView().findViewById(R.id.message);
-//            tv.setTextSize(textSize);
-//        }
     }
 
     public void onTextSizeDecreased(View view) {
-        if (textSize > DEFAULT_TEXT_SIZE) {
+        if (textSize > Constants.DEFAULT_TEXT_SIZE) {
             textSize -= 2;
+
+            saveAdjustedTextSize();
         }
 
         Intent intent = new Intent("TextSize");
         intent.putExtra("TextSize", textSize);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
-
-//        mSectionsPagerAdapter.notifyDataSetChanged();
-//        mViewPager.setCurrentItem(mViewPager.getCurrentItem());
-
-//        mViewPager.setAdapter(mSectionsPagerAdapter);
-
-//        mSectionsPagerAdapter.notifyDataSetChanged();
-
-//        for (Fragment f : fragments) {
-//            TextView tv = (TextView) f.getView().findViewById(R.id.message);
-//            tv.setTextSize(textSize);
-//        }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
+    void saveAdjustedTextSize() {
+        SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("TextSize", textSize);
+        editor.commit();
+    }
+
     public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
         static final String ARG_DECLARATION = "declaration";
         static final String ARG_SIZE = "size";
 
         public PlaceholderFragment() {
         }
 
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
         public static PlaceholderFragment newInstance(String declaration, int size) {
             PlaceholderFragment fragment = new PlaceholderFragment();
             Bundle args = new Bundle();
@@ -320,22 +286,22 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             String declaration = getArguments().getString(ARG_DECLARATION);
             int size = getArguments().getInt(ARG_SIZE);
 
-            final TextView textView = (TextView) rootView.findViewById(R.id.message);
+            final TextView textView = rootView.findViewById(R.id.message);
             textView.setTextSize(size);
             textView.setText(declaration);
 
+            // receive the broadcast message to change the text size
             IntentFilter filter = new IntentFilter("TextSize");
             LocalBroadcastManager.getInstance(getActivity()).registerReceiver(new BroadcastReceiver() {
                 @Override
                 public void onReceive(Context context, Intent intent) {
-                    int size = intent.getIntExtra("TextSize", DEFAULT_TEXT_SIZE);
+                    int size = intent.getIntExtra("TextSize", Constants.DEFAULT_TEXT_SIZE);
                     textView.setTextSize(size);
                 }
             }, filter);
@@ -344,10 +310,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
-     * one of the sections/tabs/pages.
-     */
     public class SectionsPagerAdapter extends FragmentStatePagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -356,8 +318,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
+            // getItem is called to instantiate the fragment for the given page. Return a PlaceholderFragment (defined as a static inner class below).
             return PlaceholderFragment.newInstance(declarations.get(position), textSize);
         }
 

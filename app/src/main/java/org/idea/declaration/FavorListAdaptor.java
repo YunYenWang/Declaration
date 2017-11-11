@@ -25,8 +25,8 @@ public class FavorListAdaptor extends BaseAdapter {
         this.context = context;
 
         for (String fn : context.getCacheDir().list()) {
-            if (fn.startsWith("favor.")) {
-                int position = Integer.parseInt(fn.substring(6));
+            if (fn.startsWith(Constants.FAVOR_FILE_NAME_PREFIX)) {
+                int position = Integer.parseInt(fn.substring(Constants.FAVOR_FILE_NAME_PREFIX.length()));
                 ids.add(position);
             }
         }
@@ -69,7 +69,7 @@ public class FavorListAdaptor extends BaseAdapter {
         }
 
         public View update(int position) {
-            TextView tv = (TextView) findViewById(R.id.text);
+            TextView tv = findViewById(R.id.text);
             tv.setText(String.format("%02d", position + 1));
 
             return this;
