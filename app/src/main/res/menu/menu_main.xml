@@ -1,0 +1,24 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.idea.declaration.MainActivity">
+    <item
+        android:id="@+id/action_favor"
+        android:icon="@mipmap/ic_favorite_border_white_24dp"
+        android:orderInCategory="100"
+        android:title="@string/action_favor"
+        app:showAsAction="ifRoom|withText" />
+
+    <item
+        android:id="@+id/action_clear"
+        android:orderInCategory="100"
+        android:title="@string/action_clear"
+        app:showAsAction="withText" />
+
+    <item
+        android:id="@+id/action_about"
+        android:orderInCategory="200"
+        android:title="@string/action_about"
+        app:showAsAction="never" />
+
+</menu>
