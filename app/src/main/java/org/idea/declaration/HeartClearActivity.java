@@ -16,14 +16,18 @@ public class HeartClearActivity extends AppCompatActivity {
         setContentView(R.layout.activity_heart_clear);
 
         SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
-        int textSize = settings.getInt("TextSize", Constants.DEFAULT_TEXT_SIZE);
+        float textSize = settings.getFloat("TextSize", Constants.DEFAULT_TEXT_SIZE);
 
-        TextView tv = (TextView) findViewById(R.id.message);
+        TextView tv = findViewById(R.id.message);
         tv.setTextSize(textSize);
     }
 
     public void onOpenLink(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://goo.gl/nuldeD"));
         startActivity(intent);
+    }
+
+    public void onExit(View view) {
+        finish();
     }
 }

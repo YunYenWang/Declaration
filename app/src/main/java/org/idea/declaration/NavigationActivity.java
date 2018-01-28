@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -28,13 +30,17 @@ import android.widget.TextView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Calendar;
 import java.util.List;
+
+import javax.microedition.khronos.opengles.GL;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     static final Logger LOG = LoggerFactory.getLogger(NavigationActivity.class);
 
+    List<List<String>> declarations;
     LinearLayout favorites;
     ViewPager viewPager;
 
@@ -44,6 +50,10 @@ public class NavigationActivity extends AppCompatActivity
         setContentView(R.layout.activity_navigation);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        loadPreferences();
+
+        toolbar.setBackgroundColor(getResources().getColor(R.color.toolbarColor));
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -55,6 +65,7 @@ public class NavigationActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         favorites = findViewById(R.id.favorites);
+        registerTextSizeChanged();
         reloadFavorites();
 
         IntentFilter filter = new IntentFilter("ReloadFavorites");
@@ -65,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity
             }
         }, filter);
 
-        final List<List<String>> declarations = Store.buildDeclarations(getAssets());
+        declarations = Store.buildDeclarations(getAssets());
 
         viewPager = findViewById(R.id.container);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {
@@ -80,6 +91,8 @@ public class NavigationActivity extends AppCompatActivity
                 return ContentFragment.newInstance(declarations.get(position));
             }
         });
+
+        today();
     }
 
     @Override
@@ -89,6 +102,16 @@ public class NavigationActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+        }
+    }
+
+    void loadPreferences() {
+        try {
+            SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
+            Globals.textSize = settings.getFloat("TextSize", Constants.DEFAULT_TEXT_SIZE);
+
+        } catch (Exception e) {
+            LOG.error("Failed to load preferences", e);
         }
     }
 
@@ -107,7 +130,16 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_favor) {
+            if (favorites.getVisibility() == View.VISIBLE) {
+                favorites.setVisibility(View.GONE);
+                item.setIcon(R.mipmap.ic_favorite_border_white_24dp);
+
+            } else {
+                favorites.setVisibility(View.VISIBLE);
+                item.setIcon(R.mipmap.ic_favorite_white_24dp);
+            }
+
             return true;
         }
 
@@ -120,18 +152,15 @@ public class NavigationActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
+        if (id == R.id.nav_clear) {
+            Intent intent = new Intent(this, HeartClearActivity.class);
+            startActivity(intent);
 
         } else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
-
+        } else if (id == R.id.nav_about) {
+            Intent intent = new Intent(this, AboutActivity.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -144,10 +173,14 @@ public class NavigationActivity extends AppCompatActivity
     void reloadFavorites() {
         favorites.removeAllViews();
 
+        int color = getResources().getColor(R.color.favoriteColor);
+
         for (final String line : Store.loadFavorites(this)) {
-            final TextView tv = new TextView(this);
+            final View v = getLayoutInflater().inflate(R.layout.favor_item, null);
+
+            TextView tv = v.findViewById(R.id.text);
             tv.setTextSize(Globals.textSize);
-            tv.setTextColor(Constants.FAVOR_COLOR);
+            tv.setTextColor(color);
             tv.setText(line);
             tv.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -159,7 +192,7 @@ public class NavigationActivity extends AppCompatActivity
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
                                             if (i == 0) {
-                                                favorites.removeView(tv);
+                                                favorites.removeView(v);
                                                 Store.removeFavorite(NavigationActivity.this, line);
 
                                             } else if (i == 1) {
@@ -171,7 +204,67 @@ public class NavigationActivity extends AppCompatActivity
                     return true;
                 }
             });
-            favorites.addView(tv);
+
+            favorites.addView(v);
         }
+    }
+
+    void registerTextSizeChanged() {
+        IntentFilter filter = new IntentFilter("TextSize");
+        LocalBroadcastManager.getInstance(this).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                float size = intent.getFloatExtra("TextSize", Constants.DEFAULT_TEXT_SIZE);
+                int s = favorites.getChildCount();
+                for (int i = 0;i < s;i++) {
+                    TextView tv = favorites.getChildAt(i).findViewById(R.id.text);
+                    tv.setTextSize(size);
+                }
+            }
+        }, filter);
+    }
+
+    // ======
+
+    void today() {
+        int index = Calendar.getInstance().get(Calendar.DAY_OF_MONTH) - 1;
+        if (index >= declarations.size()) {
+            index = (int) (Math.random() * declarations.size());
+        }
+
+        viewPager.setCurrentItem(index);
+    }
+
+    public void onRefreshClicked(View view) {
+        viewPager.setCurrentItem((int) (Math.random() * declarations.size()));
+    }
+
+    void saveAdjustedTextSize() {
+        SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putFloat("TextSize", Globals.textSize);
+        editor.commit();
+    }
+
+    public void onLargeTextSizeClicked(View view) {
+        Globals.textSize += 2;
+
+        saveAdjustedTextSize();
+
+        Intent intent = new Intent("TextSize");
+        intent.putExtra("TextSize", Globals.textSize);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
+
+    public void onSmallTextSizeClicked(View view) {
+        if (Globals.textSize > Constants.DEFAULT_TEXT_SIZE) {
+            Globals.textSize -= 2;
+
+            saveAdjustedTextSize();
+        }
+
+        Intent intent = new Intent("TextSize");
+        intent.putExtra("TextSize", Globals.textSize);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 }

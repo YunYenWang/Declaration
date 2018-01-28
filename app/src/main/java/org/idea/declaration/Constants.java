@@ -7,7 +7,7 @@ import android.graphics.Color;
  */
 
 public class Constants {
-    public static final int DEFAULT_TEXT_SIZE = 12;
+    public static final float DEFAULT_TEXT_SIZE = 12f;
 
     public static final String DECLARATION_FILE = "declaration.txt";
 

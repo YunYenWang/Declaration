@@ -6,17 +6,32 @@
     android:layout_height="match_parent"
     tools:context="org.idea.declaration.HeartClearActivity">
 
+    <Button
+        android:id="@+id/exit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/shape_background"
+        android:onClick="onExit"
+        android:text="回上一頁"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <ScrollView
-        android:layout_width="368dp"
-        android:layout_height="576dp"
+        android:id="@+id/scroll"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/exit_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textView5">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -26,7 +41,6 @@
                 android:id="@+id/message"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/clear_text"
@@ -40,10 +54,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:onClick="onOpenLink"
+                android:text="https://goo.gl/nuldeD"
                 android:textColor="@color/colorPrimary"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:text="https://goo.gl/nuldeD"
                 app:layout_constraintEnd_toEndOf="@+id/message"
                 app:layout_constraintStart_toStartOf="@+id/message"
                 app:layout_constraintTop_toBottomOf="@+id/message" />
@@ -51,7 +65,20 @@
         </android.support.constraint.ConstraintLayout>
 
 
-
-
     </ScrollView>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_title"
+        android:text="@string/action_clear"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

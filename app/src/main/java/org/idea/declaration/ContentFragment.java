@@ -51,52 +51,6 @@ public class ContentFragment extends Fragment {
 
     // ======
 
-//    TextView newFavoriteTextView(final LinearLayout content, final String line) {
-//        final TextView tv = new TextView(content.getContext());
-//        tv.setTextSize(Globals.textSize);
-//        tv.setTextColor(Constants.FAVOR_COLOR);
-//        tv.setText(line);
-//        tv.setOnLongClickListener(new View.OnLongClickListener() {
-//            @Override
-//            public boolean onLongClick(View view) {
-//                new AlertDialog.Builder(content.getContext())
-//                        .setItems(
-//                                new String[] { getString(R.string.remove), getString(R.string.share) },
-//                                new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                if (i == 0) {
-//                                    content.removeView(tv);
-//                                    Store.removeFavorite(getContext(), line);
-//
-//                                } else if (i == 1) {
-//                                    // TODO -
-//                                }
-//                            }
-//                        }).show();
-//
-//                return true;
-//            }
-//        });
-//
-//        return tv;
-//    }
-
-    int getFavoritesTailIndex(LinearLayout content) {
-        int s = content.getChildCount();
-        for (int i = 0;i < s;i++) {
-            View v = content.getChildAt(i);
-            if (v instanceof TextView) {
-                TextView tv = (TextView) v;
-                if (tv.getCurrentTextColor() != Constants.FAVOR_COLOR) {
-                    return i;
-                }
-            }
-        }
-
-        return 0;
-    }
-
     TextView newTextView(final LinearLayout content, final String line) {
         final TextView tv = new TextView(content.getContext());
         tv.setTextSize(Globals.textSize);
@@ -111,9 +65,6 @@ public class ContentFragment extends Fragment {
                                     @Override
                                     public void onClick(DialogInterface dialogInterface, int i) {
                                         if (i == 0) {
-//                                            TextView ftv = newFavoriteTextView(content, line);
-//                                            content.addView(ftv, getFavoritesTailIndex(content));
-//
                                             Store.addFavorite(getContext(), line);
 
                                             Intent intent = new Intent("ReloadFavorites");
@@ -141,25 +92,24 @@ public class ContentFragment extends Fragment {
         final LinearLayout content = root.findViewById(R.id.canvas);
         content.removeAllViews();
 
-//        for (String line : Store.loadFavorites(root.getContext())) {
-//            TextView tv = newFavoriteTextView(content, line);
-//            content.addView(tv);
-//        }
-
         for (String line : lines) {
             TextView tv = newTextView(content, line);
             content.addView(tv);
         }
 
         // receive the broadcast message to change the text size
-//        IntentFilter filter = new IntentFilter("TextSize");
-//        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(new BroadcastReceiver() {
-//            @Override
-//            public void onReceive(Context context, Intent intent) {
-//                int size = intent.getIntExtra("TextSize", Constants.DEFAULT_TEXT_SIZE);
-//                textView.setTextSize(size);
-//            }
-//        }, filter);
+        IntentFilter filter = new IntentFilter("TextSize");
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                float size = intent.getFloatExtra("TextSize", Constants.DEFAULT_TEXT_SIZE);
+                int s = content.getChildCount();
+                for (int i = 0;i < s;i++) {
+                    TextView tv = (TextView) content.getChildAt(i);
+                    tv.setTextSize(size);
+                }
+            }
+        }, filter);
 
         return root;
     }
