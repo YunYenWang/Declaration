@@ -63,8 +63,8 @@ public class MainActivity extends AppCompatActivity {
 
         buildDeclarations();
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
         mViewPager = findViewById(R.id.container);
@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
                     touch(f);
                     setFavorite(true);
 
-                    Snackbar.make(view, getString(R.string.add_favor), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                    Snackbar.make(view, getString(R.string.add), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
                 }
             }
         });
