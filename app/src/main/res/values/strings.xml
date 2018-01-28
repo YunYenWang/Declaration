@@ -18,6 +18,8 @@
 
     <string name="add">新增最愛</string>
     <string name="remove">刪除</string>
+    <string name="paper">好文分享</string>
     <string name="share">分享</string>
+    <string name="exit">離開</string>
 
 </resources>

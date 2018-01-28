@@ -39,7 +39,7 @@ public class Store {
                     FileInputStream fis = new FileInputStream(f);
                     try {
                         BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
-                        String ln = br.readLine();
+                        String ln;
                         while ((ln = br.readLine()) != null) {
                             favorites.add(ln);
                         }

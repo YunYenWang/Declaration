@@ -71,7 +71,7 @@ public class ContentFragment extends Fragment {
                                             LocalBroadcastManager.getInstance(getContext()).sendBroadcast(intent);
 
                                         } else if (i == 1) {
-                                            // TODO -
+                                            Utils.shareTo(getContext(), line);
                                         }
                                     }
                                 }).show();

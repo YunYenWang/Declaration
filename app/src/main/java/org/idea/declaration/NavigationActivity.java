@@ -156,11 +156,19 @@ public class NavigationActivity extends AppCompatActivity
             Intent intent = new Intent(this, HeartClearActivity.class);
             startActivity(intent);
 
+        } else if (id == R.id.nav_paper) {
+            Intent intent = new Intent(this, PaperActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_share) {
+            Utils.shareTo(this, "https://play.google.com/store/apps/details?id=org.idea.declaration");
 
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);
+
+        } else if (id == R.id.nav_exit) {
+            finish();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -196,7 +204,7 @@ public class NavigationActivity extends AppCompatActivity
                                                 Store.removeFavorite(NavigationActivity.this, line);
 
                                             } else if (i == 1) {
-                                                // TODO -
+                                                Utils.shareTo(NavigationActivity.this, line);
                                             }
                                         }
                                     }).show();
