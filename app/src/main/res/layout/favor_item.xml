@@ -12,8 +12,7 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_weight="1"
-        app:srcCompat="@mipmap/ic_favorite_black_18dp" />
+        app:srcCompat="@mipmap/ic_favorite_black_18dp" android:contentDescription=""/>
 
     <TextView
         android:id="@+id/text"
@@ -25,6 +24,6 @@
         android:layout_marginLeft="8dp"
         android:layout_toEndOf="@+id/imageView2"
         android:layout_toRightOf="@+id/imageView2"
-        android:layout_weight="1" />
+        android:layout_marginStart="8dp"/>
 
 </RelativeLayout>

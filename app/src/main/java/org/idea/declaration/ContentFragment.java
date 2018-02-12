@@ -94,8 +94,17 @@ public class ContentFragment extends Fragment {
 
         for (String line : lines) {
             TextView tv = newTextView(content, line);
-            content.addView(tv);
+
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+            lp.setMargins(0, 0, 0, (int) Globals.textSize);
+
+            content.addView(tv, lp);
         }
+
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        lp.setMargins(0, (int) Globals.textSize * 2, 0, (int) Globals.textSize * 2);
+        content.addView(new TextView(content.getContext()), lp);
+
 
         // receive the broadcast message to change the text size
         IntentFilter filter = new IntentFilter("TextSize");

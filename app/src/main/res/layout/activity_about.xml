@@ -68,7 +68,6 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/shape_background"
         android:onClick="onExit"
         android:text="回上一頁"
         app:layout_constraintBottom_toBottomOf="parent"
