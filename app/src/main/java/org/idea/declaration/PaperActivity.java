@@ -25,17 +25,22 @@ import java.io.InputStreamReader;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 public class PaperActivity extends AppCompatActivity {
     static final Logger LOG = LoggerFactory.getLogger(PaperActivity.class);
 
-    ActionBar bar;
+    static final String PREFIX = "Daniel/";
 
+    ActionBar bar;
     LinearLayout contentView;
 
     String[] subjects;
+
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,27 +53,39 @@ public class PaperActivity extends AppCompatActivity {
 
         contentView = findViewById(R.id.content);
 
-        new Thread(new Runnable() {
+        executor.execute(new Runnable() {
             @Override
             public void run() {
                 doLoad();
             }
-        }).start();
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        executor.shutdown();
+
+        super.onDestroy();
+    }
+
+    ZipInputStream open() throws IOException {
+        return new ZipInputStream(getAssets().open("Daniel.zip"));
     }
 
     void doLoad() {
         try {
-            InputStream is = getAssets().open("Daniel.zip");
+            ZipInputStream zis = open();
             try {
-                subjects = loadSubjects(is);
+                subjects = loadSubjects(zis);
 
                 for (String subject : subjects) {
                     LOG.info("subject: {}", subject);
                 }
 
             } finally {
-                is.close();
+                zis.close();
             }
+
         } catch (IOException e) {
             LOG.error("Failed to open Daniel.zip", e);
         }
@@ -81,13 +98,13 @@ public class PaperActivity extends AppCompatActivity {
         });
     }
 
-    String[] loadSubjects(InputStream is) throws IOException {
+    String[] loadSubjects(ZipInputStream zis) throws IOException {
         Set<String> subjects = new LinkedHashSet<>();
-        ZipInputStream zis = new ZipInputStream(is);
+
         ZipEntry ze;
         while ((ze = zis.getNextEntry()) != null) {
             String name = ze.getName();
-            if (name.startsWith("Daniel/")) {
+            if (name.startsWith(PREFIX)) {
                 StringTokenizer st = new StringTokenizer(name, "/");
                 st.nextToken();
                 if (st.hasMoreTokens()) {
@@ -102,26 +119,45 @@ public class PaperActivity extends AppCompatActivity {
         return subjects.toArray(new String[subjects.size()]);
     }
 
+    ImageView newImageView(ZipInputStream zis) {
+        ImageView iv = new ImageView(this);
+        Bitmap bm = BitmapFactory.decodeStream(zis);
+        iv.setImageBitmap(bm);
+        iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        iv.setAdjustViewBounds(true);
+
+        return iv;
+    }
+
+    TextView newTextView(String text) {
+        TextView tv = new TextView(this);
+        tv.setText(text);
+        tv.setTextSize(Globals.textSize);
+
+        return tv;
+    }
+
+    void addBottomPadding() {
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+        lp.setMargins(0, (int) Globals.textSize * 2, 0, (int) Globals.textSize * 2);
+        contentView.addView(new TextView(this), lp);
+    }
+
     void openSubject(String subject) throws IOException {
         bar.setTitle(subject);
 
         contentView.removeAllViews();
 
-        String screen = "Daniel/" + subject + "/Screen.png";
-        String text = "Daniel/" + subject + "/text.txt";
+        String screen = String.format("%s%s/Screen.png", PREFIX, subject);
+        String text = String.format("%s%s/text.txt", PREFIX, subject);
 
-        InputStream is = getAssets().open("Daniel.zip");
+        ZipInputStream zis = open();
         try {
-            ZipInputStream zis = new ZipInputStream(is);
             ZipEntry ze;
             while ((ze = zis.getNextEntry()) != null) {
                 String name = ze.getName();
                 if (name.equals(screen)) {
-                    ImageView iv = new ImageView(this);
-                    Bitmap bm = BitmapFactory.decodeStream(zis);
-                    iv.setImageBitmap(bm);
-                    iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    iv.setAdjustViewBounds(true);
+                    ImageView iv = newImageView(zis);
 
                     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
                     lp.setMargins(0, (int) Globals.textSize, 0, 0);
@@ -133,28 +169,26 @@ public class PaperActivity extends AppCompatActivity {
                     BufferedReader br = new BufferedReader(isr);
                     String ln;
                     while ((ln = br.readLine()) != null) {
-                        TextView tv = new TextView(this);
-                        tv.setText(ln);
-                        tv.setTextSize(Globals.textSize);
+                        TextView tv = newTextView(ln);
 
-                        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-
-                        contentView.addView(tv, lp);
+                        contentView.addView(tv);
                     }
 
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-                    lp.setMargins(0, (int) Globals.textSize * 2, 0, (int) Globals.textSize * 2);
-                    contentView.addView(new TextView(this), lp);
+                    addBottomPadding();
+
+                    break;
                 }
             }
 
         } finally {
-            is.close();
+            zis.close();
         }
 
         ScrollView sv = findViewById(R.id.scrollView);
         sv.fullScroll(ScrollView.FOCUS_UP);
     }
+
+    // ======
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,8 +199,6 @@ public class PaperActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_subject) {
             onSubjects();
 
@@ -205,9 +237,5 @@ public class PaperActivity extends AppCompatActivity {
         } catch (Exception e) {
             LOG.error("Failed to open subject", e);
         }
-    }
-
-    public void onBack(View view) {
-        finish();
     }
 }

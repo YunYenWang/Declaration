@@ -20,11 +20,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".AboutActivity" />
-        <activity android:name=".HeartClearActivity" />
+        <activity
+            android:name=".HeartClearActivity"
+            android:theme="@style/Theme.AppCompat"
+            />
         <activity
             android:name=".PaperActivity"
             android:theme="@style/Theme.AppCompat"
-            ></activity>
+            />
     </application>
 
 </manifest>
