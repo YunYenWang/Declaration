@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v7.app.ActionBar;
@@ -17,13 +18,23 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class MeditationActivity extends AppCompatActivity {
     static final Logger LOG = LoggerFactory.getLogger(MeditationActivity.class);
 
-    LocalServiceConnection connection = new LocalServiceConnection();
-    BackgroundMusicService service;
-
+    TextView status;
     ToggleButton playButton;
+
+    MediaPlayer player;
+    File file;
+
+    ExecutorService executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,8 @@ public class MeditationActivity extends AppCompatActivity {
         ActionBar bar = getSupportActionBar();
         bar.setTitle(R.string.action_meditation);
         bar.setDisplayHomeAsUpEnabled(true);
+
+        status = findViewById(R.id.status);
 
         TextView text = findViewById(R.id.text);
         try {
@@ -44,34 +57,45 @@ public class MeditationActivity extends AppCompatActivity {
         }
 
         playButton = findViewById(R.id.play);
-//        playButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (playButton.isChecked()) {
-//                    service.play();
-//
-//                } else {
-//                    service.pause();
-//                }
-//            }
-//        });
+        playButton.setVisibility(View.INVISIBLE);
+
+        playButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (playButton.isChecked()) {
+                    player.start();
+
+                } else {
+                    player.pause();
+                }
+            }
+        });
+
+        player = new MediaPlayer();
+
+        file = new File(getCacheDir(), "mediation.mp3");
+        if (file.canRead()) {
+            prepare();
+
+        } else {
+            status.setText(R.string.downloading);
+
+            executor.execute(new Runnable() {
+                @Override
+                public void run() {
+                    doDownload();
+                }
+            });
+        }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onDestroy() {
+        executor.shutdown();
 
-//        Intent intent = new Intent(this, BackgroundMusicService.class);
-//
-//        startService(intent);
-//        bindService(intent, connection, Context.BIND_AUTO_CREATE);
-    }
+        player.stop();
 
-    @Override
-    protected void onStop() {
-//        unbindService(connection);
-
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
@@ -86,22 +110,62 @@ public class MeditationActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    void onConnected(BackgroundMusicService service) {
-        this.service = service;
-
-        playButton.setChecked(service.isPlaying());
+    void setStatus(final String text) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                status.setText(text);
+            }
+        });
     }
 
-    class LocalServiceConnection implements ServiceConnection {
+    void doDownload() {
+        try {
+            URL url = new URL(getString(R.string.meditation_audio_url));
+            InputStream is = url.openStream();
+            FileOutputStream fos = new FileOutputStream(file);
+            try {
+                long total = 0;
 
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            onConnected(((BackgroundMusicService.MyBinder) iBinder).getService());
+                byte[] buf = new byte[4096];
+                int s;
+                while ((s = is.read(buf)) > 0) {
+                    fos.write(buf, 0, s);
+
+                    setStatus(String.format("%,d bytes", total += s));
+                }
+
+                fos.flush();
+
+            } finally {
+                fos.close();
+            }
+
+            setStatus(getString(R.string.downloaded));
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    prepare();
+                }
+            });
+
+        } catch (Exception e) {
+            LOG.error("Failed to download file", e);
+
+            setStatus(getString(R.string.download_error));
         }
+    }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            LOG.info("Un-bind service");
+    void prepare() {
+        try {
+            player.setDataSource(file.getAbsolutePath());
+            player.prepare();
+
+            playButton.setVisibility(View.VISIBLE);
+
+        } catch (Exception e) {
+            LOG.error("Failed to open audio file", e);
         }
     }
 }

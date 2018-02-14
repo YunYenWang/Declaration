@@ -9,4 +9,11 @@
         android:title="@string/action_favor"
         app:showAsAction="ifRoom|withText" />
 
+    <item
+        android:id="@+id/action_paper"
+        android:icon="@mipmap/ic_reorder_white_24dp"
+        android:orderInCategory="110"
+        android:title="@string/paper"
+        app:showAsAction="ifRoom|withText" />
+
 </menu>

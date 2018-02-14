@@ -141,6 +141,12 @@ public class NavigationActivity extends AppCompatActivity
             }
 
             return true;
+
+        } else if (id == R.id.action_paper) {
+            Intent intent = new Intent(this, PaperActivity.class);
+            startActivity(intent);
+
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
