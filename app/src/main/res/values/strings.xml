@@ -4,6 +4,7 @@
     <string name="action_favor">書籤</string>
     <string name="action_clear">灑掃庭除</string>
     <string name="action_about">作者</string>
+    <string name="action_subject">主題</string>
     <string name="author">陳威廷</string>
     <string name="section_format">Hello World from section: %1$d</string>
 

@@ -4,8 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,7 +31,8 @@ import java.util.zip.ZipInputStream;
 public class PaperActivity extends AppCompatActivity {
     static final Logger LOG = LoggerFactory.getLogger(PaperActivity.class);
 
-    TextView subjectView;
+    ActionBar bar;
+
     LinearLayout contentView;
 
     String[] subjects;
@@ -38,7 +42,10 @@ public class PaperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_paper);
 
-        subjectView = findViewById(R.id.subject);
+        bar = getSupportActionBar();
+        bar.setDisplayHomeAsUpEnabled(true);
+        bar.setTitle(R.string.paper);
+
         contentView = findViewById(R.id.content);
 
         new Thread(new Runnable() {
@@ -96,7 +103,7 @@ public class PaperActivity extends AppCompatActivity {
     }
 
     void openSubject(String subject) throws IOException {
-        subjectView.setText(subject);
+        bar.setTitle(subject);
 
         contentView.removeAllViews();
 
@@ -149,8 +156,32 @@ public class PaperActivity extends AppCompatActivity {
         sv.fullScroll(ScrollView.FOCUS_UP);
     }
 
-    public void onSubjects(View view) {
-        AlertDialog ad = new AlertDialog.Builder(this)
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.paper, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_subject) {
+            onSubjects();
+
+            return true;
+        } else if (id == android.R.id.home) {
+            finish();
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void onSubjects() {
+        new AlertDialog.Builder(this)
                 .setItems(subjects, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -161,9 +192,9 @@ public class PaperActivity extends AppCompatActivity {
                             LOG.error("Failed to open subject", e);
                         }
                     }
-                }).create();
-
-        ad.show();
+                })
+                .create()
+                .show();
     }
 
     public void onRefresh(View view) {
