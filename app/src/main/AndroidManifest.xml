@@ -22,12 +22,27 @@
         <activity android:name=".AboutActivity" />
         <activity
             android:name=".HeartClearActivity"
-            android:theme="@style/Theme.AppCompat"
-            />
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".PaperActivity"
-            android:theme="@style/Theme.AppCompat"
-            />
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".MeditationActivity"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".BackgroundMusicActivity"
+            android:theme="@style/Theme.AppCompat" />
+
+        <activity
+            android:name=".EmotionTableActivity"
+            android:theme="@style/Theme.AppCompat" />
+
+        <service
+            android:name=".BackgroundMusicService"
+            android:enabled="true"
+            android:exported="true" />
+
+
     </application>
 
 </manifest>

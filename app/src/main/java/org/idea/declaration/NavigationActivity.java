@@ -163,6 +163,18 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             Utils.shareTo(this, "https://play.google.com/store/apps/details?id=org.idea.declaration");
 
+        } else if (id == R.id.nav_meditation) {
+            Intent intent = new Intent(this, MeditationActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_bgm) {
+            Intent intent = new Intent(this, BackgroundMusicActivity.class);
+            startActivity(intent);
+
+        } else if (id == R.id.nav_emotion) {
+            Intent intent = new Intent(this, EmotionTableActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_about) {
             Intent intent = new Intent(this, AboutActivity.class);
             startActivity(intent);

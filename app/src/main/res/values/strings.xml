@@ -3,15 +3,21 @@
     <string name="action_settings">Settings</string>
     <string name="action_favor">書籤</string>
     <string name="action_clear">灑掃庭除</string>
+    <string name="action_meditation">啟動金色冥想</string>
+    <string name="action_bgm">古箏音樂</string>
+    <string name="action_emotion">受困情緒表</string>
     <string name="action_about">作者</string>
     <string name="action_subject">主題</string>
     <string name="author">陳威廷</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
+    <string name="play">播放</string>
+
     <string name="remove_favor">已從書籤移除</string>
     <string name="about_text">此 App 獻給想要獲得喜悅以及提昇的每一個人。此手冊原文摘錄自《喜悅之道》一書，由「生命潛能文化事業」出版，但部分內容稍有修改、添加。\n\n藉由語言與文字的力量，每日複頌，並感受內在充滿喜悅，你就真的可以獲得喜悅。</string>
     <string name="clear_text">我釋放我所有負面情緒源頭，\n\n我釋放我所有負面思想源頭，\n\n我釋放我所有負面意念源頭，\n\n我釋放我所有負面圖像源頭，\n\n我釋放我所有負面能量源頭，\n\n我釋放我所有貪瞋癡慢疑能量源頭。\n\n我是獨一無二的，我值得被愛。\n\n
 感恩累世以來與今生今世，我所擁有的【豐盛】【富足】【完美】【成功】【自信】與【相信】… 因為我已擁有 【豐盛】【富足】【完美】【成功】【自信】與【相信】，我無所恐懼，擔憂和懷疑，沒有任何一件事或一個人，會令我不快樂的。因此，今生今世，我【是】 【豐盛的】【富足的】【完美的】【成功的】【有自信的】與【相信自己】…… 無論是在 xxx，xxx，xxx (自己編吧，譬如: 人與人的關係啦，呵呵)…… 感恩我所擁有的一切。\n\n我請求累世以來與今生今世 曾經被我傷害的生命，曾經造成他痛苦的生命，還有對他不好與讓他不舒服的生命，我請求你們的原諒與寬恕…… 謝謝你們的原諒和寬恕，並祝福你們。\n\n\n累世以來與今生今世 曾經傷害我的人/事/生命，曾經造成我痛苦的人/事/生命，還有對我不好與讓我不舒服的人/事/生命，我選擇原諒與寬恕你們，並且祝福你們。\n\n\n\n我也要原諒與寬恕 累世以來與今生今世 所有的【我】，並且祝福【我】。\n\n\n我要感謝我的高我，我的大我，感謝我的指導上師，感謝諸佛菩薩，諸天神聖，感謝光的天使們，感謝光的上師們，謝謝祢們在我身邊引導我，啟發我，教導我，保護我，謝謝祢們的耐心與慈悲，謝謝祢們給我的愛，我也很愛很愛祢們，謝謝祢們並且祝福祢們。\n\n\n我要感謝累世以來和今生今世 與我有互動過的人/事/物/生命，謝謝你們的協助，幫助我學習，成長與體驗，謝謝你們並且祝福你們。\n\n最後，我要感謝累世以來與今生今世 所有的【我】，謝謝【我】，我愛【我】，我也祝福【我】。\n\n感恩我所擁有的一切。</string>
+    <string name="bgm_text">此療癒音檔，有著高靈上師的純正、強大能量。對於身體或是靈體修復非常有助益！適於任何時刻、地點聆聽。每個人對於音檔有不同的共振與感受，如一開始有不適現象，那就減少播放次數，等身體調適後，再增加。\n\n【公告：此音檔，版權為我個人 Sikila 所有，提供大家免費下載。但是不能加入私人或團體的名稱或標籤，以作為私自推廣用途。請大家共同尊重檔案製作者！】\n\n出處：http://blog.xuite.net/allforlove1999/twblog/504769598</string>
     <string name="title_activity_navigation">NavigationActivity</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

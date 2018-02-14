@@ -15,6 +15,21 @@
             android:title="@string/paper" />
 
         <item
+            android:id="@+id/nav_meditation"
+            android:icon="@mipmap/ic_wb_sunny_black_24dp"
+            android:title="@string/action_meditation" />
+
+        <item
+            android:id="@+id/nav_bgm"
+            android:icon="@mipmap/ic_queue_music_black_24dp"
+            android:title="@string/action_bgm" />
+
+        <item
+            android:id="@+id/nav_emotion"
+            android:icon="@mipmap/ic_fingerprint_black_24dp"
+            android:title="@string/action_emotion" />
+
+        <item
             android:id="@+id/nav_share"
             android:icon="@drawable/ic_menu_share"
             android:title="@string/share" />
