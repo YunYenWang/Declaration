@@ -34,5 +34,9 @@
     <string name="download_error">下載失敗</string>
 
     <string name="meditation_audio_url">http://52.24.17.209/GoldenLight.mp3</string>
+    <string name="daniel_file">Daniel.zip</string>
+    <string name="daniel_file_version">Daniel.zip.version</string>
+    <string name="daniel_file_url">http://52.24.17.209/Daniel.zip</string>
+    <string name="daniel_file_version_url">http://52.24.17.209/Daniel.zip.version</string>
 
 </resources>

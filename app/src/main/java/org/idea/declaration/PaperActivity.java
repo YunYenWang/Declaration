@@ -19,9 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -38,6 +42,8 @@ public class PaperActivity extends AppCompatActivity {
     ActionBar bar;
     LinearLayout contentView;
 
+    File file;
+
     String[] subjects;
 
     ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -52,6 +58,8 @@ public class PaperActivity extends AppCompatActivity {
         bar.setTitle(R.string.paper);
 
         contentView = findViewById(R.id.content);
+
+        file = new File(getCacheDir(), getString(R.string.daniel_file));
 
         executor.execute(new Runnable() {
             @Override
@@ -69,7 +77,7 @@ public class PaperActivity extends AppCompatActivity {
     }
 
     ZipInputStream open() throws IOException {
-        return new ZipInputStream(getAssets().open("Daniel.zip"));
+        return new ZipInputStream(new FileInputStream(file));
     }
 
     void doLoad() {
