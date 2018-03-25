@@ -7,8 +7,11 @@ import android.graphics.Color;
  */
 
 public class Constants {
-    public static final String DECLARATION_FILE = "declaration.txt";
     public static final String FAVORITE_FILE = "favor.txt";
 
     public static final float DEFAULT_TEXT_SIZE = 12f;
+
+    public static final int BUFFER_SIZE = 4096;
+
+    public static final String UTF8 = "UTF-8";
 }

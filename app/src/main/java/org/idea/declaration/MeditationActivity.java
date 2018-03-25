@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.support.annotation.StringRes;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -34,7 +35,7 @@ public class MeditationActivity extends AppCompatActivity {
     MediaPlayer player;
     File file;
 
-    ExecutorService executor = Executors.newSingleThreadExecutor();
+    ExecutorService executor = Executors.newCachedThreadPool();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,20 +74,33 @@ public class MeditationActivity extends AppCompatActivity {
 
         player = new MediaPlayer();
 
-        file = new File(getCacheDir(), "mediation.mp3");
-        if (file.canRead()) {
-            prepare();
+        file = new File(getFilesDir(), "mediation.mp3");
 
-        } else {
-            status.setText(R.string.downloading);
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    if (file.canRead() && Utils.checksum(file, new URL(getString(R.string.meditation_audio_md5_url)))) {
+                        prepare();
 
-            executor.execute(new Runnable() {
-                @Override
-                public void run() {
-                    doDownload();
+                    } else {
+                        setStatus(R.string.downloading);
+
+                        executor.execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                doDownload();
+                            }
+                        });
+                    }
+
+                } catch (Exception e) {
+                    LOG.error("Failed to download the mediation file", e);
+
+                    prepare();
                 }
-            });
-        }
+            }
+        });
     }
 
     @Override
@@ -119,6 +133,10 @@ public class MeditationActivity extends AppCompatActivity {
         });
     }
 
+    void setStatus(@StringRes int resId) {
+        setStatus(getString(resId));
+    }
+
     void doDownload() {
         try {
             URL url = new URL(getString(R.string.meditation_audio_url));
@@ -127,7 +145,7 @@ public class MeditationActivity extends AppCompatActivity {
             try {
                 long total = 0;
 
-                byte[] buf = new byte[4096];
+                byte[] buf = new byte[Constants.BUFFER_SIZE];
                 int s;
                 while ((s = is.read(buf)) > 0) {
                     fos.write(buf, 0, s);
@@ -158,14 +176,19 @@ public class MeditationActivity extends AppCompatActivity {
     }
 
     void prepare() {
-        try {
-            player.setDataSource(file.getAbsolutePath());
-            player.prepare();
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    player.setDataSource(file.getAbsolutePath());
+                    player.prepare();
 
-            playButton.setVisibility(View.VISIBLE);
+                    playButton.setVisibility(View.VISIBLE);
 
-        } catch (Exception e) {
-            LOG.error("Failed to open audio file", e);
-        }
+                } catch (Exception e) {
+                    LOG.error("Failed to open audio file", e);
+                }
+            }
+        });
     }
 }

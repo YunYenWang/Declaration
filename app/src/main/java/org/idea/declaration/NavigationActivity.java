@@ -76,7 +76,7 @@ public class NavigationActivity extends AppCompatActivity
             }
         }, filter);
 
-        declarations = Store.buildDeclarations(getAssets());
+        declarations = Store.buildDeclarations(this);
 
         viewPager = findViewById(R.id.container);
         viewPager.setAdapter(new FragmentStatePagerAdapter(getSupportFragmentManager()) {

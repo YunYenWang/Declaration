@@ -59,7 +59,7 @@ public class PaperActivity extends AppCompatActivity {
 
         contentView = findViewById(R.id.content);
 
-        file = new File(getCacheDir(), getString(R.string.daniel_file));
+        file = new File(getFilesDir(), getString(R.string.daniel_file));
 
         executor.execute(new Runnable() {
             @Override

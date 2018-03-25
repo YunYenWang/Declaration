@@ -98,13 +98,13 @@ public class Store {
         }
     }
 
-    public static List<List<String>> buildDeclarations(AssetManager assets) {
+    public static List<List<String>> buildDeclarations(Context context) {
         List<List<String>> declarations = new ArrayList<>();
 
         try {
-            InputStream is = assets.open(Constants.DECLARATION_FILE);
+            FileInputStream fis = new FileInputStream(new File(context.getFilesDir(), context.getString(R.string.declaration_file)));
             try {
-                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+                BufferedReader br = new BufferedReader(new InputStreamReader(fis, "UTF-8"));
 
                 List<String> lines = null;
 
@@ -129,7 +129,7 @@ public class Store {
                 }
 
             } finally {
-                is.close();
+                fis.close();
             }
 
         } catch (IOException e) {

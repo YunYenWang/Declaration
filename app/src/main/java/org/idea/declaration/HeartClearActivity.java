@@ -10,7 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HeartClearActivity extends AppCompatActivity {
+    static final Logger LOG = LoggerFactory.getLogger(HeartClearActivity.class);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,11 +25,8 @@ public class HeartClearActivity extends AppCompatActivity {
         bar.setTitle(R.string.action_clear);
         bar.setDisplayHomeAsUpEnabled(true);
 
-        SharedPreferences settings = getSharedPreferences("settings", MODE_PRIVATE);
-        float textSize = settings.getFloat("TextSize", Constants.DEFAULT_TEXT_SIZE);
-
         TextView tv = findViewById(R.id.message);
-        tv.setTextSize(textSize);
+        tv.setTextSize(Globals.textSize);
     }
 
     public void onOpenLink(View view) {

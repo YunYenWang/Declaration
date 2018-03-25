@@ -12,6 +12,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="play">播放</string>
+    <string name="ok">確認</string>
 
     <string name="remove_favor">已從書籤移除</string>
     <string name="about_text">此 App 獻給想要獲得喜悅以及提昇的每一個人。此手冊原文摘錄自《喜悅之道》一書，由「生命潛能文化事業」出版，但部分內容稍有修改、添加。\n\n藉由語言與文字的力量，每日複頌，並感受內在充滿喜悅，你就真的可以獲得喜悅。</string>
@@ -31,12 +32,21 @@
 
     <string name="downloading">下載中 ...</string>
     <string name="downloaded">下載完成</string>
-    <string name="download_error">下載失敗</string>
+    <string name="download_error">下載失敗！請嘗試清除手機空間後，重新再試。</string>
 
     <string name="meditation_audio_url">http://52.24.17.209/GoldenLight.mp3</string>
+    <string name="meditation_audio_md5_url">http://52.24.17.209/GoldenLight.mp3.md5</string>
+
     <string name="daniel_file">Daniel.zip</string>
     <string name="daniel_file_version">Daniel.zip.version</string>
     <string name="daniel_file_url">http://52.24.17.209/Daniel.zip</string>
     <string name="daniel_file_version_url">http://52.24.17.209/Daniel.zip.version</string>
+    <string name="daniel_file_md5_url">http://52.24.17.209/Daniel.zip.md5</string>
+
+    <string name="declaration_file">declaration.txt</string>
+    <string name="declaration_file_version">declaration.txt.version</string>
+    <string name="declaration_file_url">http://52.24.17.209/declaration.txt</string>
+    <string name="declaration_file_version_url">http://52.24.17.209/declaration.txt.version</string>
+    <string name="declaration_file_md5_url">http://52.24.17.209/declaration.txt.md5</string>
 
 </resources>
