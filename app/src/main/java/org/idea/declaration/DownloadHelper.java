@@ -54,7 +54,7 @@ public class DownloadHelper {
                     if (file.canRead() && Utils.checksum(file, md5)) { // check from network
                         listener.onReady();
 
-                        listener.onStatus(context.getString(R.string.downloaded));
+                        listener.onStatus("");
 
                     } else {
                         listener.onStatus(context.getString(R.string.downloading)); // ready to download
@@ -69,6 +69,8 @@ public class DownloadHelper {
 
                 } catch (Exception e) {
                     LOG.error("Failed to download the mediation file", e);
+
+                    listener.onStatus("");
 
                     listener.onReady();
                 }
