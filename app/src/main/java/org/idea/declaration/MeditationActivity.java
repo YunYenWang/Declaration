@@ -104,32 +104,6 @@ public class MeditationActivity extends AppCompatActivity {
         } catch (Exception e) {
             LOG.error("Failed to check and download the file", e);
         }
-
-//        executor.execute(new Runnable() {
-//            @Override
-//            public void run() {
-//                try {
-//                    if (file.canRead() && Utils.checksum(file, new URL(getString(R.string.meditation_audio_md5_url)))) {
-//                        prepare();
-//
-//                    } else {
-//                        setStatus(R.string.downloading);
-//
-//                        executor.execute(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                doDownload();
-//                            }
-//                        });
-//                    }
-//
-//                } catch (Exception e) {
-//                    LOG.error("Failed to download the mediation file", e);
-//
-//                    prepare();
-//                }
-//            }
-//        });
     }
 
     @Override
@@ -152,57 +126,6 @@ public class MeditationActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-//    void setStatus(final String text) {
-//        runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                status.setText(text);
-//            }
-//        });
-//    }
-//
-//    void setStatus(@StringRes int resId) {
-//        setStatus(getString(resId));
-//    }
-//
-//    void doDownload() {
-//        try {
-//            URL url = new URL(getString(R.string.meditation_audio_url));
-//            InputStream is = url.openStream();
-//            FileOutputStream fos = new FileOutputStream(file);
-//            try {
-//                long total = 0;
-//
-//                byte[] buf = new byte[Constants.BUFFER_SIZE];
-//                int s;
-//                while ((s = is.read(buf)) > 0) {
-//                    fos.write(buf, 0, s);
-//
-//                    setStatus(String.format("%,d bytes", total += s));
-//                }
-//
-//                fos.flush();
-//
-//            } finally {
-//                fos.close();
-//            }
-//
-//            setStatus(getString(R.string.downloaded));
-//
-//            runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    prepare();
-//                }
-//            });
-//
-//        } catch (Exception e) {
-//            LOG.error("Failed to download file", e);
-//
-//            setStatus(getString(R.string.download_error));
-//        }
-//    }
 
     void prepare() {
         runOnUiThread(new Runnable() {

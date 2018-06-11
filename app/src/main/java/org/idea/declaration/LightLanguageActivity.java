@@ -83,6 +83,7 @@ public class LightLanguageActivity extends AppCompatActivity {
     void stopPlayer() {
         if (player != null) {
             player.stop();
+            player.release();
         }
     }
 

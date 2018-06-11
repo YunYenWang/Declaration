@@ -38,8 +38,6 @@ public class BackgroundMusicService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        player = new MediaPlayer();
-
         String channelId = "";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             channelId = createNotificationChannel();
@@ -103,7 +101,15 @@ public class BackgroundMusicService extends Service {
         try {
             index = (index + 1) % music.length;
 
-            AssetFileDescriptor afd = getAssets().openFd(music[index]);
+            String file = music[index];
+
+            LOG.info("To play {}", file);
+
+            AssetFileDescriptor afd = getAssets().openFd(file);
+
+            if (player != null) {
+                player.release();
+            }
 
             player = new MediaPlayer();
             player.setDataSource(afd.getFileDescriptor(), afd.getStartOffset(), afd.getLength());
