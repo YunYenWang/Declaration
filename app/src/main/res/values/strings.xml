@@ -39,6 +39,26 @@
     <string name="meditation_audio_url">http://52.24.17.209/GoldenLight.mp3</string>
     <string name="meditation_audio_md5_url">http://52.24.17.209/GoldenLight.mp3.md5</string>
 
+    <string name="ll_entity_label">去除負面靈體干擾</string>
+    <string name="ll_entity_file">LL_entity.mp3</string>
+    <string name="ll_entity_file_url">http://52.24.17.209/LL_entity.mp3</string>
+    <string name="ll_entity_file_md5_url">http://52.24.17.209/LL_entity.mp3.md5sum</string>
+
+    <string name="ll_cancer_label">消融惡性細胞</string>
+    <string name="ll_cancer_file">LL_cancer.m4a</string>
+    <string name="ll_cancer_file_url">http://52.24.17.209/LL_cancer.m4a</string>
+    <string name="ll_cancer_file_md5_url">http://52.24.17.209/LL_cancer.m4a.md5</string>
+
+    <string name="ll_depression_label">緩解憂鬱</string>
+    <string name="ll_depression_file">LL_depression.m4a</string>
+    <string name="ll_depression_file_url">http://52.24.17.209/LL_depression.m4a</string>
+    <string name="ll_depression_file_md5_url">http://52.24.17.209/LL_depression.m4a.md5</string>
+
+    <string name="ll_sleep_label">釋放失眠，擁抱睡眠</string>
+    <string name="ll_sleep_file">LL_sleep.m4a</string>
+    <string name="ll_sleep_file_url">http://52.24.17.209/LL_sleep.m4a</string>
+    <string name="ll_sleep_file_md5_url">http://52.24.17.209/LL_sleep.m4a.md5sum</string>
+
     <string name="daniel_file">Daniel.zip</string>
     <string name="daniel_file_version">Daniel.zip.version</string>
     <string name="daniel_file_url">http://52.24.17.209/Daniel.zip</string>
