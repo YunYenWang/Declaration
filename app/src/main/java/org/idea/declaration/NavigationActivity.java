@@ -169,6 +169,10 @@ public class NavigationActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
             Utils.shareTo(this, "https://play.google.com/store/apps/details?id=org.idea.declaration");
 
+        } else if (id == R.id.nav_light_language) {
+            Intent intent = new Intent(this, LightLanguageActivity.class);
+            startActivity(intent);
+
         } else if (id == R.id.nav_meditation) {
             Intent intent = new Intent(this, MeditationActivity.class);
             startActivity(intent);

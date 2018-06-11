@@ -50,9 +50,17 @@ public class BackgroundMusicService extends Service {
                 .setContentTitle(getString(R.string.app_name));
 //                .setContentText(getString(R.string.play));
 
-        PendingIntent pi = PendingIntent.getActivity(this, 0,
-                new Intent(this, BackgroundMusicActivity.class),
+        PendingIntent pi = PendingIntent.getActivities(
+                this,
+                0,
+                new Intent[] {
+                        new Intent(this, NavigationActivity.class),
+                        new Intent(this, BackgroundMusicActivity.class),
+                },
                 PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        TaskStackBuilder tb = TaskStackBuilder.create(this);
+//        tb.addParentStack(NavigationActivity.class);
 
         builder.setContentIntent(pi);
 
