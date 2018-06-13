@@ -46,7 +46,6 @@ public class BackgroundMusicService extends Service {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getString(R.string.app_name));
-//                .setContentText(getString(R.string.play));
 
         PendingIntent pi = PendingIntent.getActivities(
                 this,
@@ -57,10 +56,15 @@ public class BackgroundMusicService extends Service {
                 },
                 PendingIntent.FLAG_UPDATE_CURRENT);
 
-//        TaskStackBuilder tb = TaskStackBuilder.create(this);
-//        tb.addParentStack(NavigationActivity.class);
-
         builder.setContentIntent(pi);
+
+        PendingIntent spi = PendingIntent.getBroadcast(
+                this,
+                0,
+                new Intent(this, MainBroadcastReceiver.class).setAction("stop"),
+                0);
+
+        builder.addAction(R.mipmap.ic_exit_to_app_black_24dp, getString(R.string.close), spi);
 
         Notification n = builder.build();
 
@@ -149,6 +153,8 @@ public class BackgroundMusicService extends Service {
     @Override
     public void onDestroy() {
         pause();
+
+        stopForeground(true);
 
         super.onDestroy();
     }

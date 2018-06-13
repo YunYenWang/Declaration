@@ -21,25 +21,34 @@
         <activity
             android:name=".NavigationActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme"></activity>
-        <activity android:name=".AboutActivity" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".AboutActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".HeartClearActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".PaperActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".MeditationActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".LightLanguageActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".BackgroundMusicActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".EmotionTableActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat" />
 
         <service
@@ -47,7 +56,10 @@
             android:enabled="true"
             android:exported="true" />
 
-
+        <receiver
+            android:name=".MainBroadcastReceiver"
+            android:enabled="true"
+            android:exported="true"></receiver>
     </application>
 
 </manifest>

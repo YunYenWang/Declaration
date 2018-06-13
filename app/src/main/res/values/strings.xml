@@ -30,6 +30,7 @@
     <string name="paper">好文分享</string>
     <string name="share">分享</string>
     <string name="exit">離開</string>
+    <string name="close">關閉</string>
 
     <string name="pulling">檢查是否有新版 ...</string>
     <string name="downloading">下載中 ...</string>
